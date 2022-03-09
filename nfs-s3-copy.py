@@ -170,8 +170,8 @@ def publish_message(error_msg):
 def handler(event, context):
     print(event)
     try:
-        sourceLocation = event["src"]
-        destinationLocation = event["dest"]
+        sourceLocation = event["sourceLocation"]
+        destinationLocation = event["destinationLocation"]
         print("source location : " + sourceLocation)
         print("dest location : " + destinationLocation)
         task_arn = create_task(sourceLocation, destinationLocation)
@@ -184,9 +184,11 @@ def handler(event, context):
             else:
                 time.sleep(30)
         status = start_exec(task_name, task_arn)
+        return {"status": status, "taskid": task_arn}
                 
     except Exception as err:
         print(f"Unable to execute the function. Exception : {err}")
+        return {"status": "FAILED", "taskid": "0"}
         publish_message("Error in copy scheduler: " + str(err))
         raise err
         sys.exit(1)
