@@ -192,8 +192,8 @@ def handler(event, context):
     try:
         logger.info("------------------")
 
-        SourceS3Bucket = "SourceBucketName"
-        DestinationS3Bucket = external_bucket
+        SourceS3Bucket = event["SourceBucketName"]
+        DestinationS3Bucket = event["external_bucket"]
         try: 
             task_arn=create_task(SourceS3Bucket,DestinationS3Bucket,execution_id,product_name)
         except Exception as err:
@@ -209,13 +209,13 @@ def handler(event, context):
             )
             print(response)
             if response["Status"] == "ERROR":
-                return {"execution_id": execution_id, "cluster_id" : cluster_id, "cluster_name" : cluster_name,"status": "ERROR","task_id":"0"}
+                return {"status": "ERROR","task_id":"0"}
             else:
-                return {"execution_id": execution_id, "cluster_id" : cluster_id, "cluster_name" : cluster_name,"status": response["Status"],"task_id":task_execution_arn}
+                return {"status": response["Status"],"task_id":task_execution_arn}
         except Exception as err:
             print(f"Unable to start task for external data copy : Exception: {err}")
-            return {"execution_id": execution_id, "cluster_id" : cluster_id, "cluster_name" : cluster_name,"status": "FAILED","task_id":"0"}
+            return {"status": "FAILED","task_id":"0"}
 
     except Exception as err:
         logger.error(f"Other error occurred: {err}")
-        return {"execution_id": execution_id, "cluster_id" : cluster_id, "cluster_name" : cluster_name,"status": "FAILED","task_id":"0"}
+        return {"status": "FAILED","task_id":"0"}
