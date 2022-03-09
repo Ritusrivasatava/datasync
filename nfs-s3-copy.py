@@ -28,13 +28,13 @@ def getAccountID():
     return account_id
 
 
-AgnetARN = "arn:aws:datasync:<REGION>:<ACCNT ID>:agent/<AGENT ID>" ## Please replace this ARN with actual DATASYNC Agent ARN
+#AgnetARN = "arn:aws:datasync:<REGION>:<ACCNT ID>:agent/<AGENT ID>" ## Please replace this ARN with actual DATASYNC Agent ARN
 accntid = getAccountID()
 S3RoleArn = "arn:aws:iam::" + accntid + ":role/s3_data_sync_access"
 
 
 
-def create_locations(client, src, dest):
+def create_locations(client, src, dest,AgnetARN, ServerName):
     """
     Convenience function for creating locations.
     Locations must exist before tasks can be created.
@@ -46,7 +46,7 @@ def create_locations(client, src, dest):
     print("agent arn " + AgnetARN)
     try:
         response = datasyncclient.create_location_nfs(
-            ServerHostname="ghdevhome.ghdna.io",
+            ServerHostname=ServerName,
             Subdirectory=src,
             OnPremConfig={"AgentArns": [AgnetARN]},
             MountOptions={"Version": "AUTOMATIC"},
@@ -82,11 +82,11 @@ def create_locations(client, src, dest):
     return {"nfs_arn": nfs_arn, "s3_arn": s3_arn}
 
 
-def create_task(src, dest):
+def create_task(src, dest, AgnetARN, ServerName):
     print("Creating a Task : source: " + src)
     print("Creating a Task : dest bucket=" + dest)
     try:
-        locations = create_locations(datasyncclient, src, dest)
+        locations = create_locations(datasyncclient, src, dest,AgnetARN, ServerName)
         sourceVal = [x.strip() for x in src.split("/") if x]
         TASKNAME = "GH_BIP_TASK_" + sourceVal.pop()
         print("Taskname: " + TASKNAME)
@@ -159,7 +159,7 @@ def publish_message(error_msg):
         accntid = getAccountID()
         # Sending the notification...
         snsclient.publish(
-            TargetArn="arn:aws:sns:" + REGION + ":" + accntid + ":gh-bip-notify",
+            TargetArn="arn:aws:sns:" + REGION + ":" + accntid + ":datasync-notify",
             Subject=f"Execution error for Lambda - {lambda_func_name[3]}",
             Message=message,
         )
@@ -172,9 +172,11 @@ def handler(event, context):
     try:
         sourceLocation = event["sourceLocation"]
         destinationLocation = event["destinationLocation"]
+        AgnetARN = event["AgnetARN"]
+        ServerName = event["NFSServer"]
         print("source location : " + sourceLocation)
         print("dest location : " + destinationLocation)
-        task_arn = create_task(sourceLocation, destinationLocation)
+        task_arn = create_task(sourceLocation, destinationLocation, AgnetARN, ServerName)
         wU = True
         while wU == True:
             taskStatus = describe_task(task_arn)
