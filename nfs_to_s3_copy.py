@@ -21,17 +21,14 @@ datasyncclient = boto3.client(
 def getAccountID():
     client = boto3.client("sts", region_name=os.environ['AWS_REGION'])
     try:
-         account_id = client.get_caller_identity()["Account"]
+        account_id = client.get_caller_identity()["Account"]
+        return account_id
     except Exception as err:
         print(f"Unable to get Account ID. Exception: {err}")
          sys.exit(1)
-    return account_id
-
-
+    
 accntid = getAccountID()
 S3RoleArn = "arn:aws:iam::" + accntid + ":role/s3_data_sync_access"
-
-
 
 def create_locations(client, src, dest,AgnetARN, ServerName):
     """
@@ -123,8 +120,8 @@ def describe_task(task_arn):
     return response["Status"]
 
 
-def start_exec(task_name, task_arn):
-    print("Starting Task execution :" + task_name)
+def start_exec(task_arn):
+    print("Starting Task execution :" + task_arn)
     try:
         response = datasyncclient.start_task_execution(TaskArn=task_arn)
         task_execution_arn = response["TaskExecutionArn"]
@@ -136,10 +133,10 @@ def start_exec(task_name, task_arn):
         print(response)
         return response["Status"]
     except Exception as err:
-        print(f"Unable to start task : {task_name}, Exception: {err}")
+        print(f"Unable to start task : {task_arn}, Exception: {err}")
         if "InvalidRequestException" not in str(err):
             publish_message(
-                "Unable to start task : " + task_name + ", Exception: " + str(err)
+                "Unable to start task : " + task_arn + ", Exception: " + str(err)
             )
 
 
@@ -184,15 +181,11 @@ def handler(event, context):
                 wU = False
             else:
                 time.sleep(30)
-        status = start_exec(task_name, task_arn)
+        status = start_exec(task_arn)
         return {"status": status, "taskid": task_arn}
                 
     except Exception as err:
         print(f"Unable to execute the function. Exception : {err}")
-        return {"status": "FAILED", "taskid": "0"}
         publish_message("Error in copy scheduler: " + str(err))
-        raise err
-        sys.exit(1)
+        return {"status": "FAILED", "taskid": "0"}
 
-if __name__ == "__main()__":
-    handler(None, None)
