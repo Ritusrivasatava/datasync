@@ -148,7 +148,7 @@ def createDSLocation(bucket,prefix):
         logger.error(f"Unable to datasync location, Exception: {err}")
         sys.exit(FAILED_EXIT_CODE)
 
-def create_task(src, dest, execution_id,product_name):
+def create_task(src, dest):
     print("Creating a Task : source: " + src)
     print("Creating a Task : dest bucket=" + dest)
     try:
@@ -156,7 +156,7 @@ def create_task(src, dest, execution_id,product_name):
 
         SourceLocationArn=createDSLocation(src,prefix)
         DestinationLocationArn=createDSLocation(dest,prefix)
-        TASKNAME="task_"+execution_id
+        TASKNAME="task_"+dest
         options = {
             "VerifyMode": "ONLY_FILES_TRANSFERRED",
             "Atime": "BEST_EFFORT",
@@ -195,7 +195,7 @@ def handler(event, context):
         SourceS3Bucket = event["SourceBucketName"]
         DestinationS3Bucket = event["external_bucket"]
         try: 
-            task_arn=create_task(SourceS3Bucket,DestinationS3Bucket,execution_id,product_name)
+            task_arn=create_task(SourceS3Bucket,DestinationS3Bucket)
         except Exception as err:
             print(f"Unable to create Datasync task for external data copy : Exception: {err}")
             raise err
