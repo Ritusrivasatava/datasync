@@ -12,28 +12,28 @@ This lambda performs following steps to transfer on-premise data to S3
 4. Start execution of DataSync Task
 
 ## Lambda Input:
-
+```
 {
 	"sourceLocation": “NAME OF SOURCE Directory”,
 	“destinationLocation": “NAME OF DESTINATION BUCKET”,
 	“AgnetARN”: "arn:aws:datasync:<REGION>:<ACCNT ID>:agent/<AGENT ID>",
 	“NFSServer”: “ServerHostname”
 }
-
+```
 Note: NFSServer is the name of the NFS server. This value is the IP address or Domain Name Service (DNS) name of the NFS server. An agent that is installed on-premises uses this host name to mount the NFS server in a network.
 
 ## Lambda Output:
-
+```
 {
 	"status": “TRANSFERRING”,
     “taskid": “arn:aws:datasync:region:account-id:task/task-id”
 }
-  
+```  
 ## s3_to_s3_copy.py
 This lambda performs following steps to transfer s3 data to another account S3
 
 1. Create a custom DataSync policy for specific source and destination buckets, (replace <sourcebucket> and <destinationbucket> with appropriate values).
-
+```
   "Version": "2012-10-17",
         "Statement": [
             {
@@ -63,7 +63,8 @@ This lambda performs following steps to transfer s3 data to another account S3
                         "arn:aws:s3:::<destinationbucket>/*"
               }
           ]
-      } <br />
+      } 
+```
 2. Attach the custom policy above to datasync-role-source role.<br />
 3. Set up a DataSync destination location (S3) on the destination account.<br />
 4. Set up a DataSync source location (S3) on the destination account.<br />
@@ -72,19 +73,21 @@ This lambda performs following steps to transfer s3 data to another account S3
 
 ## Lambda Input:
 
-<br /> 
+```
 {
 	"SourceBucketName": “NAME OF SOURCE BUCKET”,
 
 	“external_bucket": “NAME OF DESTINATION BUCKET”
 
 }
+```
 ## Lambda Output:
 
-<br />
+```
 	{
 	"status": “TRANSFERRING”,
 
 	“taskid": “arn:aws:datasync:region:account-id:task/task-id”
 
 }
+```
