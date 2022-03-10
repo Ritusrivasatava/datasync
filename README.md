@@ -15,9 +15,9 @@ This lambda performs following steps to transfer on-premise data to S3
 ```json
 {
 	"sourceLocation": "NAME OF SOURCE Directory",
-	“destinationLocation": "NAME OF DESTINATION BUCKET",
-	“AgnetARN”: "arn:aws:datasync:<REGION>:<ACCNT ID>:agent/<AGENT ID>",
-	“NFSServer”: "ServerHostname"
+	"destinationLocation": "NAME OF DESTINATION BUCKET",
+	"AgnetARN": "arn:aws:datasync:<REGION>:<ACCNT ID>:agent/<AGENT ID>",
+	"NFSServer": "ServerHostname"
 }
 ```
 Note: NFSServer is the name of the NFS server. This value is the IP address or Domain Name Service (DNS) name of the NFS server. An agent that is installed on-premises uses this host name to mount the NFS server in a network.
@@ -26,7 +26,7 @@ Note: NFSServer is the name of the NFS server. This value is the IP address or D
 ```json
 {
     "status": "TRANSFERRING",
-    “taskid": "arn:aws:datasync:region:account-id:task/task-id"
+    "taskid": "arn:aws:datasync:region:account-id:task/task-id"
 }
 ```  
 ## s3_to_s3_copy.py
@@ -77,8 +77,7 @@ This lambda performs following steps to transfer s3 data to another account S3
 ```json
 {
 	"SourceBucketName": "NAME OF SOURCE BUCKET",
-
-	“external_bucket": "NAME OF DESTINATION BUCKET"
+	"external_bucket": "NAME OF DESTINATION BUCKET"
 
 }
 ```
@@ -87,8 +86,7 @@ This lambda performs following steps to transfer s3 data to another account S3
 ```json
 {
 	"status": "TRANSFERRING",
-
-	“taskid": "arn:aws:datasync:region:account-id:task/task-id"
+	"taskid": "arn:aws:datasync:region:account-id:task/task-id"
 
 }
 ```
