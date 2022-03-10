@@ -28,7 +28,6 @@ def getAccountID():
     return account_id
 
 
-#AgnetARN = "arn:aws:datasync:<REGION>:<ACCNT ID>:agent/<AGENT ID>" ## Please replace this ARN with actual DATASYNC Agent ARN
 accntid = getAccountID()
 S3RoleArn = "arn:aws:iam::" + accntid + ":role/s3_data_sync_access"
 
