@@ -88,7 +88,7 @@ def create_task(src, dest, AgnetARN, ServerName):
     try:
         locations = create_locations(datasyncclient, src, dest,AgnetARN, ServerName)
         sourceVal = [x.strip() for x in src.split("/") if x]
-        TASKNAME = "GH_BIP_TASK_" + sourceVal.pop()
+        TASKNAME = "TASK_" + sourceVal.pop()
         print("Taskname: " + TASKNAME)
 
         options = {
