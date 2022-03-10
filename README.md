@@ -63,12 +63,12 @@ This lambda performs following steps to transfer s3 data to another account S3
                         "arn:aws:s3:::<destinationbucket>/*"
               }
           ]
-      }
-2. Attach the custom policy above to datasync-role-source role.
-3. Set up a DataSync destination location (S3) on the destination account.
-4. Set up a DataSync source location (S3) on the destination account.
-5. Create a DataSync task to initiate data transfer with specified parameters for source location, destination location, settings and task logging
-6. Start execution of DataSync Task
+      } <br />
+2. Attach the custom policy above to datasync-role-source role.<br />
+3. Set up a DataSync destination location (S3) on the destination account.<br />
+4. Set up a DataSync source location (S3) on the destination account.<br />
+5. Create a DataSync task to initiate data transfer with specified parameters for source location, destination location, settings and task logging.<br />
+6. Start execution of DataSync Task.<br />
 
 ## Lambda Input:
 
