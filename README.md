@@ -25,7 +25,7 @@ Note: NFSServer is the name of the NFS server. This value is the IP address or D
 ## Lambda Output:
 ```
 {
-	"status": “TRANSFERRING”,
+    "status": “TRANSFERRING”,
     “taskid": “arn:aws:datasync:region:account-id:task/task-id”
 }
 ```  
@@ -84,7 +84,7 @@ This lambda performs following steps to transfer s3 data to another account S3
 ## Lambda Output:
 
 ```
-	{
+{
 	"status": “TRANSFERRING”,
 
 	“taskid": “arn:aws:datasync:region:account-id:task/task-id”
