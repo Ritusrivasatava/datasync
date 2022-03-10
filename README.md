@@ -72,6 +72,7 @@ This lambda performs following steps to transfer s3 data to another account S3
 
 ## Lambda Input:
 
+<br /> 
 {
 	"SourceBucketName": “NAME OF SOURCE BUCKET”,
 
@@ -80,7 +81,8 @@ This lambda performs following steps to transfer s3 data to another account S3
 }
 ## Lambda Output:
 
-{
+<br />
+	{
 	"status": “TRANSFERRING”,
 
 	“taskid": “arn:aws:datasync:region:account-id:task/task-id”
